@@ -1,49 +1,12 @@
 <script>
 	import RabbitForm from '$lib/components/RabbitForm.svelte';
-	import { serverAddress } from '$lib/store.js';
-	// unsere Imports:
+	import { serverAddress, store } from '$lib/store.svelte.js';
 	import Icon from '@iconify/svelte';
-
-	// unsere "Instanz- bzw. Komponentenvariablen":
-	let rabbits = $state([]);
-
-	// unsere Methoden zur Datenmanipulation:
-	async function listRabbits() {
-		const response = await fetch(`http://${serverAddress}:7070/rabbits`);
-		console.log('response: ', response);
-		rabbits = await response.json();
-	}
-
-	async function deleteRabbit(id) {
-		const response = await fetch('http://' + serverAddress + ':7070/rabbits/' + id, {
-			method: 'DELETE'
-		});
-		listRabbits();
-	}
-
-	async function editRabbit(id) {
-		let newName = prompt('New Rabbit Name:', 'neuer Name');
-		let editedRabbit = {
-			name: newName
-		};
-		try {
-			const response = await fetch(`http://${serverAddress}:7070/rabbits/` + id, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(editedRabbit)
-			});
-		} catch (error) {
-			console.log(error);
-		}
-		listRabbits();
-	}
 
 	// unser "Konstruktor" (lifecycle hook) - läuft jedesmal, wenn die Seite bzw. die Komponente geladen wird:
 	$effect(() => {
-		listRabbits();
-		$inspect('🐰: ', rabbits);
+		store.listRabbits();
+		$inspect('🐰: ', store.rabbits);
 	});
 </script>
 
@@ -58,16 +21,18 @@
 	<div></div>
 	<div></div>
 
-	{#each rabbits as rabbit}
+	{#each store.rabbits as rabbit}
 		<div class="pr-3 text-right">{rabbit.id}</div>
 		<div class="pr-3">{rabbit.name}</div>
 		<div class="pr-3">
-			<button onclick={() => editRabbit(rabbit.id)} class="cursor-pointer"
+			<button onclick={() => store.editRabbit(rabbit.id)} class="cursor-pointer"
 				><Icon icon="carbon:edit" width="16" height="16" /></button
 			>
 		</div>
 		<div>
-			<button onclick={() => deleteRabbit(rabbit.id)} class="cursor-pointer text-red-500">x</button>
+			<button onclick={() => store.deleteRabbit(rabbit.id)} class="cursor-pointer text-red-500"
+				>x</button
+			>
 		</div>
 	{/each}
 </div>

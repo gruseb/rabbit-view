@@ -1,20 +1,15 @@
 <script>
-	import { serverAddress } from '$lib/store';
+	import { serverAddress, store } from '$lib/store.svelte.js';
 
 	let name = $state('');
+
 	async function addRabbit() {
-		const response = await fetch(`http://${serverAddress}:7070/rabbits`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				name: name
-			})
-		});
+		await store.addRabbit(name);
 		name = '';
+		store.listRabbits();
 	}
 </script>
 
 <input type="text" bind:value={name} />
+<div>{name}</div>
 <button class="cursor-pointer" onclick={addRabbit}>Add Rabbit!</button>
