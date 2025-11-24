@@ -2,7 +2,8 @@
 	import { serverAddress, store } from '$lib/store.svelte.js';
 
 	let name = $state('');
-	let wrongRabbitName = $derived(name[0] !== 'J' && name.length !== 0);
+	let wrongRabbitName = $derived(name.length > 0 && name[0] !== 'J');
+
 	async function addRabbit() {
 		await store.addRabbit(name);
 		name = '';
@@ -30,6 +31,6 @@
 				d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
 			/>
 		</svg>
-		<span>Error! Rabbit name must start with J.</span>
+		<span>Watch out! Rabbit names must start with "J"!</span>
 	</div>
 {/if}

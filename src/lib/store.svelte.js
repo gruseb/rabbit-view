@@ -11,6 +11,7 @@ export let store = $state({
 
 		store.rabbits = await pb.collection('rabbits').getFullList();;
 	},
+
 	editRabbit: async (id, newName) => {
 		let editedRabbit = {
 			name: newName
