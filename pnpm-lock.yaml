@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      pocketbase:
+        specifier: ^0.26.3
+        version: 0.26.3
     devDependencies:
       '@iconify/svelte':
         specifier: ^5.0.2
@@ -698,6 +702,9 @@ packages:
     resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
     engines: {node: '>=12'}
 
+  pocketbase@0.26.3:
+    resolution: {integrity: sha512-5deUKRoEczpxxuHzwr6/DHVmgbggxylEVig8CKN+MjvtYxPUqX/C6puU0yaR2yhTi8zrh7J9s7Ty+qBGwVzWOQ==}
+
   postcss-selector-parser@6.0.10:
     resolution: {integrity: sha512-IQ7TZdoaqbT+LCpShg46jnZVlhWD2w6iQYAcYXfHARZ7X1t/UGhhceQDs5X0cGqKvYlHNOuv7Oa1xmb0oQuA3w==}
     engines: {node: '>=4'}
@@ -1345,6 +1352,8 @@ snapshots:
   picocolors@1.1.1: {}
 
   picomatch@4.0.3: {}
+
+  pocketbase@0.26.3: {}
 
   postcss-selector-parser@6.0.10:
     dependencies:

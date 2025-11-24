@@ -5,10 +5,16 @@
 
 	let currentRabbitId = $state();
 	let newName = $state('');
+	let wrongRabbitName = $derived(newName[0] !== 'J' && newName.length !== 0);
 
+	//Funktion zum Bearbeiten eines Kaninchens
+	// Weil in einer anonymen Funktion kann man nur einen Befehl schreiben, deshalb hier eine benannte Funktion:
 	async function editRabbit() {
-		await store.editRabbit(currentRabbitId, newName);
-		newName = '';
+		if (newName[0] === 'J') {
+			await store.editRabbit(currentRabbitId, newName);
+			newName = '';
+		}
+		store.listRabbits();
 	}
 
 	// unser "Konstruktor" (lifecycle hook) - läuft jedesmal, wenn die Seite bzw. die Komponente geladen wird:
@@ -21,14 +27,14 @@
 <!-- unser Template / HTML-Teil der Seite bzw. der Komponente -->
 <h1 class="text-3xl">Our Rabbits</h1>
 
-<div class="grid w-[200px] grid-cols-[32px_1fr_32px_32px] items-end">
-	<div>ID</div>
+<div class="grid w-[200px] grid-cols-[64px_1fr_32px_32px] items-end">
+	<div>Number</div>
 	<div>Name</div>
 	<div></div>
 	<div></div>
 
-	{#each store.rabbits as rabbit}
-		<div class="pr-3 text-right">{rabbit.id}</div>
+	{#each store.rabbits as rabbit, index}
+		<div class="pr-3 text-right">{index + 1}</div>
 		<div class="pr-3">{rabbit.name}</div>
 		<div class="pr-3">
 			<button
@@ -54,11 +60,32 @@
 		<div class="modal-action">
 			<form method="dialog" class="flex gap-2">
 				<!-- if there is a button in form, it will close the modal -->
-				<button class="btn">Cancel</button><button class="btn btn-primary" onclick={editRabbit}
-					>Change Name!</button
+				<button class="btn">Cancel</button>
+				<button
+					class="btn btn-primary"
+					onclick={editRabbit}
+					disabled={wrongRabbitName || newName.length === 0}>Change Name!</button
 				>
 			</form>
 		</div>
+		{#if wrongRabbitName}
+			<div role="alert" class="mt-4 alert alert-error">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-6 w-6 shrink-0 stroke-current"
+					fill="none"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+					/>
+				</svg>
+				<span>Error! Rabbit name must start with J.</span>
+			</div>
+		{/if}
 	</div>
 </dialog>
 

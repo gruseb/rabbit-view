@@ -1,26 +1,24 @@
+import PocketBase from 'pocketbase';
 export const serverAddress = '10.20.227.50';
+const pb = new PocketBase(`http://127.0.0.1:8090`);
 
 // export {serverAddress}; -> alternative Schreibweise, wenn kein export direkt bei der Variable!
 
 export let store = $state({
 	rabbits: [],
 	listRabbits: async () => {
-		const response = await fetch(`http://${serverAddress}:7070/rabbits`);
-		console.log('response: ', response);
-		store.rabbits = await response.json();
+
+
+		store.rabbits = await pb.collection('rabbits').getFullList();;
 	},
 	editRabbit: async (id, newName) => {
 		let editedRabbit = {
 			name: newName
 		};
 		try {
-			const response = await fetch(`http://${serverAddress}:7070/rabbits/` + id, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(editedRabbit)
-			});
+			//await: Warten bis fetch fertig ist
+			const record = await pb.collection('rabbits').update(id, editedRabbit);
+	
 			if (!response.ok) {
 				alert(await response.text());
 			}
@@ -30,20 +28,14 @@ export let store = $state({
 		store.listRabbits();
 	},
 	deleteRabbit: async function (id) {
-		const response = await fetch('http://' + serverAddress + ':7070/rabbits/' + id, {
-			method: 'DELETE'
-		});
+		await pb.collection('rabbits').delete(id);
 		store.listRabbits();
 	},
 	addRabbit: async (name) => {
-		const response = await fetch(`http://${serverAddress}:7070/rabbits`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				name: name
-			})
+		const response = await pb.collection('rabbits').create({
+			name: name
 		});
+
+		
 	}
 });
