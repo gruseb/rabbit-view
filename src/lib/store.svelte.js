@@ -1,6 +1,6 @@
 import PocketBase from 'pocketbase';
 export const serverAddress = '10.20.227.50';
-const pb = new PocketBase(`http://127.0.0.1:8090`);
+export const pb = new PocketBase(`http://127.0.0.1:8090`);
 
 // export {serverAddress}; -> alternative Schreibweise, wenn kein export direkt bei der Variable!
 
@@ -9,7 +9,9 @@ export let store = $state({
 	listRabbits: async () => {
 
 
-		store.rabbits = await pb.collection('rabbits').getFullList();;
+		store.rabbits = await pb.collection('rabbits').getFullList({
+			expand: 'rabbithole'
+		});
 	},
 
 	editRabbit: async (id, newName) => {
@@ -19,7 +21,7 @@ export let store = $state({
 		try {
 			//await: Warten bis fetch fertig ist
 			const record = await pb.collection('rabbits').update(id, editedRabbit);
-	
+
 			if (!response.ok) {
 				alert(await response.text());
 			}
@@ -32,11 +34,12 @@ export let store = $state({
 		await pb.collection('rabbits').delete(id);
 		store.listRabbits();
 	},
-	addRabbit: async (name) => {
+	addRabbit: async (name, rabbithole) => {
 		const response = await pb.collection('rabbits').create({
-			name: name
+			name: name,
+			rabbithole: rabbithole
 		});
 
-		
+
 	}
 });

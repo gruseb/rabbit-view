@@ -1,18 +1,35 @@
 <script>
-	import { serverAddress, store } from '$lib/store.svelte.js';
+	import { store, pb } from '$lib/store.svelte.js';
 
 	let name = $state('');
+	let rabbithole = $state('');
 	let wrongRabbitName = $derived(name.length > 0 && name[0] !== 'J');
+	let rabbitholes = $state('');
 
 	async function addRabbit() {
-		await store.addRabbit(name);
+		await store.addRabbit(name, rabbithole);
 		name = '';
+		rabbithole = '';
 		store.listRabbits();
 	}
+	$effect(async () => {
+		rabbitholes = await pb.collection('rabbitholes').getFullList();
+	});
+	//35:13
 </script>
 
-<input type="text" bind:value={name} class="text-black" />
-
+<div>
+	<label for="name">Name</label>
+	<input id="name" type="text" bind:value={name} class="input" />
+</div>
+<div>
+	<label for="rabbithole">rabbithole</label>
+	<select class="select" bind:value={rabbithole}>
+		{#each rabbitholes as hole (hole.id)}
+			<option value={hole.id}>{hole.name}</option>
+		{/each}
+	</select>
+</div>
 <button class="btn btn-primary" onclick={addRabbit} disabled={wrongRabbitName || name.length === 0}
 	>Add Rabbit!</button
 >
