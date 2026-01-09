@@ -14,13 +14,11 @@ export let store = $state({
 		});
 	},
 
-	editRabbit: async (id, newName) => {
-		let editedRabbit = {
-			name: newName
-		};
+	editRabbit: async (id, rabbit) => {
+
 		try {
 			//await: Warten bis fetch fertig ist
-			const record = await pb.collection('rabbits').update(id, editedRabbit);
+			const record = await pb.collection('rabbits').update(id, rabbit);
 
 			if (!response.ok) {
 				alert(await response.text());
