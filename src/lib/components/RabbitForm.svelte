@@ -21,7 +21,8 @@
 		await store.editRabbit(rabbitId, rabbit);
 		goto('/');
 	}
-	async function invalidBrithday() {
+	async function invalidBirthday() {
+		rabbit.birthday = convertDate(rabbit.birthday);
 		if (!rabbit.birthday || rabbit.birthday === 'YYYY-MM-DD') {
 			//ist disabled
 			return true;
@@ -67,13 +68,15 @@
 		<button
 			class="btn btn-primary"
 			onclick={saveChanges}
-			disabled={wrongRabbitName || rabbit.name.length === 0 || tryBrithday()}>Save Changes!</button
+			disabled={wrongRabbitName || rabbit.name.length === 0 || invalidBirthday()}
+			>Save Changes!</button
 		>
 	{:else}
 		<button
 			class="btn btn-primary"
 			onclick={addRabbit}
-			disabled={wrongRabbitName || rabbit.name.length === 0 || tryBrithday()}>Add Rabbit!</button
+			disabled={wrongRabbitName || rabbit.name.length === 0 || invalidBirthday()}
+			>Add Rabbit!</button
 		>
 	{/if}
 	{#if wrongRabbitName}
@@ -94,7 +97,7 @@
 			<span>Watch out! Rabbit names must start with "J"!</span>
 		</div>
 	{/if}
-	{#if tryBrithday() && rabbit.birthday !== 'YYYY-MM-DD' && rabbit.birthday.length > 0}
+	{#if invalidBirthday() && rabbit.birthday !== 'YYYY-MM-DD' && rabbit.birthday.length > 0}
 		<div role="alert" class="mt-4 alert alert-error">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
