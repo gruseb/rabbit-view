@@ -30,10 +30,11 @@ export let store = $state({
 		await pb.collection('rabbits').delete(id);
 		store.listRabbits();
 	},
-	addRabbit: async (name, rabbithole) => {
+	addRabbit: async (name, rabbithole, birthday) => {
 		const response = await pb.collection('rabbits').create({
 			name: name,
-			rabbithole: rabbithole
+			rabbithole: rabbithole,
+			birthday: birthday
 		});
 
 
