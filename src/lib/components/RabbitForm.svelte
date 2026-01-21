@@ -61,17 +61,21 @@
 		if (!dateString) {
 			return 'YYYY-MM-DD';
 		}
-		// If date is in format "YYYY-MM-DD HH:MM:SS", extract only "YYYY-MM-DD"
+		
 		if (dateString.includes(' ')) {
 			return dateString.split(' ')[0];
 		}
 		return dateString;
+	}
+	function howManyAreInRabbithole(rabbitholeId) {
+		return store.rabbits.filter((rabbit) => rabbit.rabbithole === rabbitholeId).length;
 	}
 
 	$effect(async () => {
 		rabbitholes = await pb.collection('rabbitholes').getFullList();
 		if (rabbitId) {
 			const foundRabbit = store.rabbits.find((rabbit) => rabbitId === rabbit.id);
+			//braucht man, weil sonst wird das Datum nicht richtig angezeigt im Editiermodus
 			rabbit = Object.assign({}, foundRabbit, {
 				birthday: convertFromDbFormat(foundRabbit?.birthday) // das ? braucht man, dass kein Fehler aufkommt, wenn er keinen findet
 			});
@@ -98,7 +102,11 @@
 		<label for="rabbithole">rabbithole</label>
 		<select class="select" bind:value={rabbit.rabbithole}>
 			{#each rabbitholes as hole (hole.id)}
-				<option disabled={rabbit.rabbithole === hole.id} value={hole.id}>{hole.name}</option>
+				<option
+					disabled={rabbit.rabbithole === hole.id ||
+						howManyAreInRabbithole(hole.id) >= hole.capacity}
+					value={hole.id}>{hole.name}</option
+				>
 			{/each}
 		</select>
 	</div>
