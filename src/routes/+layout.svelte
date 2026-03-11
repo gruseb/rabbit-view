@@ -1,7 +1,8 @@
 <script>
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import { store } from '$lib/store.svelte';
+	import { pb, store } from '$lib/store.svelte';
+	import { goto } from '$app/navigation';
 
 	let { children } = $props();
 	let theme = $state('halloween');
@@ -11,6 +12,10 @@
 	}
 
 	$effect(() => {
+		if (!pb.authStore.isValid) {
+			goto('/auth');
+		}
+		store.listRabbits();
 		if (localStorage.getItem('theme')) {
 			theme = localStorage.getItem('theme');
 		}
