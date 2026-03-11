@@ -33,6 +33,7 @@
 		]
 	},
 	"dependencies": {
+		"@supabase/supabase-js": "^2.99.1",
 		"pocketbase": "^0.26.3"
 	}
 }
